@@ -1,21 +1,27 @@
 #include <SFML/Graphics.hpp>
 
+#include "Draw.hpp"
+#include "TextureManager.hpp"
+#include "Player.hpp"
+#include "Background.hpp"
+
+#include <iostream>
+
+
+
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
-    window.setFramerateLimit(144);
 
-    while (window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-            {
-                window.close();
-            }
-        }
+    Draw draw;
+    TextureManager textureManager;
 
-        window.clear();
-        window.display();
+    Background bg(textureManager.getTexture("../../images/background.png"), draw);
+    Player player(textureManager.getTexture("../../images/textures/Bird.png"), draw);
+
+    while(draw.isOpen()){
+        player.update();
+        draw.render();
     }
+    
+
 }
