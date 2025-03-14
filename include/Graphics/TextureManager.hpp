@@ -8,7 +8,9 @@
 class TextureManager{
     private:
         std::map<std::string, std::shared_ptr<sf::Texture>> textures;
+        std::unordered_map<std::string, std::vector<std::pair<sf::IntRect, std::shared_ptr<sf::Texture>>>> spriteSheets;
 
     public:
         const sf::Texture& getTexture(const std::string& filename);
+        const sf::Texture& getTexture(const std::string& filename, const sf::IntRect rect);
 };

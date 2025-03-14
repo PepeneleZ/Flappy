@@ -14,6 +14,6 @@ FetchContent_MakeAvailable(SFML)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(main src/main.cpp src/Draw.cpp src/TextureManager.cpp src/Player.cpp src/Background.cpp)
+add_executable(main src/main.cpp src/Core/Game.cpp src/Graphics/Render.cpp src/Graphics/TextureManager.cpp src/Entities/Player.cpp src/Entities/Background.cpp src/Entities/Ground.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
