@@ -5,11 +5,14 @@
 #include <memory>
 #include <iostream>
 
-const sf::Texture& TextureManager::getTexture(const std::string& filename){
+const sf::Texture& TextureManager::getTexture(const std::string& filename, bool repeated){
     
     auto it = textures.find(filename);
     if(it != textures.end()){
-        return *(it->second);
+        auto& texture = *(it->second);
+        if(repeated) texture.setRepeated(repeated); 
+
+        return texture;
     }
 
     auto texture = std::make_shared<sf::Texture>();
@@ -18,18 +21,23 @@ const sf::Texture& TextureManager::getTexture(const std::string& filename){
     }
 
     textures[filename] = texture;
+    
+    auto& textureRef = *texture;
+    if(repeated) textureRef.setRepeated(repeated);
 
-    return *texture;
+    return textureRef;
 }
 
-const sf::Texture& TextureManager::getTexture(const std::string& filename, sf::IntRect rect){
+const sf::Texture& TextureManager::getTexture(const std::string& filename, sf::IntRect rect, bool repeated){
     
-    std::cout << "beu";
     auto sheetIt = spriteSheets.find(filename);
     if(sheetIt != spriteSheets.end()){
         for(const auto& pair : sheetIt->second){
             if(pair.first == rect){
-                return *pair.second;
+                auto& texture = *pair.second;
+                if(repeated) texture.setRepeated(repeated);
+
+                return texture;
             }
         }
     }
@@ -41,7 +49,10 @@ const sf::Texture& TextureManager::getTexture(const std::string& filename, sf::I
 
     spriteSheets[filename].emplace_back(rect, texture);
 
-    return *texture;
+    auto& textureRef = *texture;
+    if(repeated) textureRef.setRepeated(repeated);
+
+    return textureRef;
 
 
 }

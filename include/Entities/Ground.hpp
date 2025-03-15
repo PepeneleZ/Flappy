@@ -3,13 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include "Graphics/Render.hpp"
 #include "Graphics/TextureManager.hpp"
+#include "Collisions/ICollidable.hpp"
 
-class Ground {
+class Ground : public ICollidable{
     private:
         sf::Texture texture;
         sf::Sprite sprite;
 
     public:
-        Ground(TextureManager&  textureManager);
-        void draw(Render& render);
+        Ground(TextureManager&  tm, Render& render, CollisionManager& cm);
+
+        sf::FloatRect getBounds() const override;
+        void onCollision(Event* event) override;
+        ObjectType getType() const override; 
+        bool isDestroyed() const override;
 };  

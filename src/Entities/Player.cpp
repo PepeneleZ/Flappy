@@ -2,15 +2,24 @@
 
 #include <iostream>
 
-Player::Player(TextureManager&  textureManager, Render& render) : texture(textureManager.getTexture("../../textures/sheet.png", sf::IntRect({110, 403}, {24, 18}))), sprite(texture){
-    sprite.setOrigin({12.f, 9.f});
-    sprite.setScale(sf::Vector2(4.f, 4.f));
-    sprite.setPosition({532.f, 400.f});
-    render.add(sprite, 2);
+Player::Player(TextureManager&  tm, Render& render, EventDispatcher& ed, CollisionManager& cm) 
+    : texture(tm.getTexture("../../textures/sheet.png"))
+    , sprite(texture, sf::IntRect({689, 0}, {68, 48}))
+    , ICollidable(cm)
+{
+    sprite.setOrigin({34.f, 24.f});
+    sprite.setPosition({512.f, 384.f});
+
+    ed.addListener(EventType::Collision, [&](Event* event) { onCollision(event); });
+
+    render.add(sprite, 5);
 }
 
 void Player::update(float deltaTime) {
+    if(!isCrashed) move(deltaTime);
+}
 
+void Player::move(float deltaTime){
     if (isJumping && jumpTimer.getElapsedTime().asMilliseconds() > 500.f) {
         isJumping = false;
     }
@@ -29,4 +38,27 @@ void Player::update(float deltaTime) {
     }
 
     sprite.move({0.f, velocity * deltaTime});
+}
+
+sf::FloatRect Player::getBounds() const {
+    return sprite.getGlobalBounds();
+}
+
+void Player::onCollision(Event* event) {
+    auto* collisionEvent = dynamic_cast<CollisionEvent*>(event);
+    if (collisionEvent) {
+        ICollidable* other = (collisionEvent->getObjectA() == this) ? collisionEvent->getObjectB() : collisionEvent->getObjectA();
+
+        if (other->getType() == ObjectType::Ground) {
+            isCrashed = true;
+        }
+    }
+}
+
+ObjectType Player::getType() const {
+    return ObjectType::Player;
+}
+
+bool Player::isDestroyed() const {
+    return false;
 }

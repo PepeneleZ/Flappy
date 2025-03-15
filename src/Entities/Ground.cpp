@@ -1,11 +1,28 @@
 #include "Entities/Ground.hpp"
+#include <iostream>
 
-Ground::Ground(TextureManager&  textureManager) : texture(textureManager.getTexture("../../textures/sheet.png", sf::IntRect({291, 0}, {168, 56}))), sprite(texture){
-    sprite.setScale(sf::Vector2(6.5f, 3.f));
-    sprite.setOrigin({84.f, 28.f});
-    sprite.setPosition({532.f, 744.f});
+Ground::Ground(TextureManager&  tm, Render& render, CollisionManager& cm) 
+    : texture(tm.getTexture("../../textures/sheet.png", sf::IntRect({0, 771}, {512, 168}), true))
+    , sprite(texture)
+    , ICollidable(cm)
+{
+    sprite.setTextureRect(sf::IntRect({0, 0}, {1024, 168}));
+    sprite.setPosition({0.f, 600.f});
+    render.add(sprite, 2);
 }
 
-void Ground::draw(Render& render){
-    render.add(sprite, 1);
+sf::FloatRect Ground::getBounds() const {
+    return sprite.getGlobalBounds();
+}
+
+void Ground::onCollision(Event* event) {
+    
+}
+
+ObjectType Ground::getType() const {
+    return ObjectType::Ground;
+}
+
+bool Ground::isDestroyed() const {
+    return false;
 }

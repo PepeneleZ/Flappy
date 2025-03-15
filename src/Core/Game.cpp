@@ -1,6 +1,12 @@
 #include "Core/Game.hpp"
 
-Game::Game() : window(sf::VideoMode({1064u, 800u}), "Flappy"), bg(textureManager, renderer), player(textureManager, renderer){
+Game::Game()
+    : window(sf::VideoMode({1024u, 768u}), "Flappy") 
+    , bg(textureManager, renderer)
+    , ground(textureManager, renderer, collisionManager)
+    , player(textureManager, renderer, eventDispatcher, collisionManager)
+    , collisionManager(eventDispatcher)
+{
 
 
 }
@@ -16,6 +22,8 @@ void Game::run() {
         }
 
         float deltaTime = clock.restart().asSeconds();
+
+        collisionManager.checkCollisions();
 
         update(deltaTime);
         

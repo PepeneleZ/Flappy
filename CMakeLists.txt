@@ -14,6 +14,39 @@ FetchContent_MakeAvailable(SFML)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(main src/main.cpp src/Core/Game.cpp src/Graphics/Render.cpp src/Graphics/TextureManager.cpp src/Entities/Player.cpp src/Entities/Background.cpp src/Entities/Ground.cpp)
+set(CORE_FILES
+    src/Core/Game.cpp
+)
+
+set(GRAPHICS_FILES
+    src/Graphics/Render.cpp
+    src/Graphics/TextureManager.cpp
+)
+
+set(ENTITIES_FILES
+    src/Entities/Player.cpp
+    src/Entities/Background.cpp
+    src/Entities/Ground.cpp
+)
+
+set(EVENTS_FILES
+    src/Events/EventDispatcher.cpp
+)
+
+set(COLLISIONS_FILES
+    src/Collisions/CollisionManager.cpp
+    src/Collisions/CollisionEvent.cpp
+    src/Collisions/ICollidable.cpp
+)
+
+add_executable(main 
+    src/main.cpp
+    ${CORE_FILES} 
+    ${GRAPHICS_FILES} 
+    ${ENTITIES_FILES} 
+    ${EVENTS_FILES} 
+    ${COLLISIONS_FILES}
+)
+
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)

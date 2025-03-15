@@ -11,6 +11,7 @@ class TextureManager{
         std::unordered_map<std::string, std::vector<std::pair<sf::IntRect, std::shared_ptr<sf::Texture>>>> spriteSheets;
 
     public:
-        const sf::Texture& getTexture(const std::string& filename);
-        const sf::Texture& getTexture(const std::string& filename, const sf::IntRect rect);
+        const sf::Texture& getTexture(const std::string& filename, bool repeated = false);
+        const sf::Texture& getTexture(const std::string& filename, const sf::IntRect rect, bool repeated = false);
+
 };
