@@ -3,11 +3,17 @@
 void CollisionManager::checkCollisions(){
     for (size_t i = 0; i < objects.size(); ++i) {
         for (size_t j = i + 1; j < objects.size(); ++j) {
-            if (objects[i]->getBounds().findIntersection(objects[j]->getBounds())) {
-                dispatcher.dispatch(new CollisionEvent(objects[i], objects[j]));
+            if(shouldCollide(objects[i], objects[j])){
+                if (objects[i]->getBounds().findIntersection(objects[j]->getBounds()) && objects[i]->getType() != ObjectType::Ground && objects[i]->getType() != ObjectType::Pipes) {
+                    dispatcher.dispatch(new CollisionEvent(objects[i], objects[j]));
+                }
             }
         }
     }
+}
+
+bool CollisionManager::shouldCollide(ICollidable* objA, ICollidable* objB){
+    if(objA->getCollisionCategory() == objB->getCollisionCategory()) return false; else return true;
 }
 
 void CollisionManager::addCollidable(ICollidable* obj) { objects.push_back(obj); }

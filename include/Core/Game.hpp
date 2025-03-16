@@ -5,6 +5,7 @@
 #include "Entities/Player.hpp"
 #include "Entities/Background.hpp"
 #include "Entities/Ground.hpp"
+#include "Entities/Pipes/PipePair.hpp"
 #include "Collisions/CollisionManager.hpp"
 #include "Events/EventDispatcher.hpp"
 #include <vector>
@@ -32,5 +33,6 @@ class Game{
         Background bg;
         Player player;
         Ground ground;
+        PipePair pipePair;
 
 };

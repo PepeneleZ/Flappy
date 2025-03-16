@@ -10,6 +10,7 @@ class CollisionManager {
     public:
         CollisionManager(EventDispatcher& dispatcher) : dispatcher(dispatcher) {};
         void checkCollisions();
+        bool shouldCollide(ICollidable* objA, ICollidable* objB);
         void addCollidable(ICollidable* collidable);
 
     private:

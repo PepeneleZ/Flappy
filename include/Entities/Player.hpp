@@ -11,6 +11,8 @@ class Player : public ICollidable{
         sf::Texture texture;
         sf::Sprite sprite;
         sf::Clock jumpTimer; 
+        sf::FloatRect collisionBox;
+        sf::RectangleShape collisionShape;
         
         bool isJumping = false;
         bool isCrashed = false;
@@ -27,5 +29,6 @@ class Player : public ICollidable{
         sf::FloatRect getBounds() const override;
         void onCollision(Event* event) override;
         ObjectType getType() const override; 
+        CollisionCategory getCollisionCategory() const override;
         bool isDestroyed() const override;
 };

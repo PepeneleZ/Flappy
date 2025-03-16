@@ -27,6 +27,8 @@ set(ENTITIES_FILES
     src/Entities/Player.cpp
     src/Entities/Background.cpp
     src/Entities/Ground.cpp
+    src/Entities/Pipes/Pipe.cpp
+    src/Entities/Pipes/PipePair.cpp
 )
 
 set(EVENTS_FILES
@@ -36,7 +38,6 @@ set(EVENTS_FILES
 set(COLLISIONS_FILES
     src/Collisions/CollisionManager.cpp
     src/Collisions/CollisionEvent.cpp
-    src/Collisions/ICollidable.cpp
 )
 
 add_executable(main 

@@ -5,6 +5,7 @@ Game::Game()
     , bg(textureManager, renderer)
     , ground(textureManager, renderer, collisionManager)
     , player(textureManager, renderer, eventDispatcher, collisionManager)
+    , pipePair(textureManager, renderer, eventDispatcher, collisionManager)
     , collisionManager(eventDispatcher)
 {
 
@@ -23,8 +24,6 @@ void Game::run() {
 
         float deltaTime = clock.restart().asSeconds();
 
-        collisionManager.checkCollisions();
-
         update(deltaTime);
         
         render();
@@ -32,7 +31,11 @@ void Game::run() {
 }
 
 void Game::update(float deltaTime) {
+    collisionManager.checkCollisions();
+    
     player.update(deltaTime);
+    pipePair.update(deltaTime);
+    
 }
 
 void Game::render() {

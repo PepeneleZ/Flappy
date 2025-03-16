@@ -10,16 +10,22 @@ enum class ObjectType {
     Ground
 };
 
+enum class CollisionCategory {
+    Player,
+    Enviroment
+};
+
 class CollisionManager;
 class ICollidable{
     public:
-        ICollidable(CollisionManager& cm);
 
         virtual sf::FloatRect getBounds() const = 0;
 
         virtual void onCollision(Event* event) = 0;
 
         virtual ObjectType getType() const = 0;
+        
+        virtual CollisionCategory getCollisionCategory() const = 0;
 
         virtual bool isDestroyed() const = 0;
 
