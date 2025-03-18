@@ -1,14 +1,13 @@
 #include "Core/Game.hpp"
+#include <iostream>
 
 Game::Game()
     : window(sf::VideoMode({1024u, 768u}), "Flappy") 
-    , bg(textureManager, renderer)
-    , ground(textureManager, renderer, collisionManager)
-    , player(textureManager, renderer, eventDispatcher, collisionManager)
-    , pipePair(textureManager, renderer, eventDispatcher, collisionManager)
-    , collisionManager(eventDispatcher)
+    , bg(tm, renderer)
+    , ground(tm, renderer, cm)
+    , player(tm, renderer, ed, cm)
+    , cm(ed)
 {
-
 
 }
 
@@ -31,11 +30,37 @@ void Game::run() {
 }
 
 void Game::update(float deltaTime) {
-    collisionManager.checkCollisions();
-    
+
+    cm.checkCollisions();
+
+    if(!player.isDead()){
+        spawnPipes(deltaTime);
+    }
+
     player.update(deltaTime);
-    pipePair.update(deltaTime);
     
+}
+
+void Game::spawnPipes(float deltaTime){
+
+    timeSinceLastPipe = pipesClock.getElapsedTime().asSeconds();
+
+    if (timeSinceLastPipe >= spawnPipeInterval) {
+        pipes.emplace_back(tm, renderer, ed, cm, startX);
+        pipesClock.restart(); 
+    }
+
+    for (auto it = pipes.begin(); it != pipes.end(); ) {
+        if (it->isOffScreen()) {
+            it->clean(renderer, cm);
+            it = pipes.erase(it); 
+        } else {
+            it->update(deltaTime);
+            ++it;
+        }
+    }
+
+
 }
 
 void Game::render() {

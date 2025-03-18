@@ -11,35 +11,42 @@ Player::Player(TextureManager&  tm, Render& render, EventDispatcher& ed, Collisi
 
     collisionBox = sf::FloatRect(sf::Vector2(sprite.getPosition().x - sprite.getTextureRect().size.x / 2, sprite.getPosition().y + sprite.getTextureRect().size.y / 2), sf::Vector2(68.f, 48.f));
 
-    /*collisionShape.setSize(collisionBox.size);
-    collisionShape.setPosition(collisionBox.position);
-    collisionShape.setFillColor(sf::Color::Transparent); 
-    collisionShape.setOutlineThickness(1);
-    collisionShape.setOutlineColor(sf::Color::Red);
-    render.add(collisionShape, 10);*/
-
     cm.addCollidable(this);
     ed.addListener(EventType::Collision, [&](Event* event) { onCollision(event); });
 
     render.add(sprite, 5);
+
+    if(showCollisionBox){
+        collisionShape.setSize(collisionBox.size);
+        collisionShape.setPosition(collisionBox.position);
+        collisionShape.setFillColor(sf::Color::Transparent); 
+        collisionShape.setOutlineThickness(1);
+        collisionShape.setOutlineColor(sf::Color::Red);
+        render.add(collisionShape, 10);
+    }
 }
 
 void Player::update(float deltaTime) {
+    if(!isCrashed) move(deltaTime);
+    updateCollisionBox();
+    if(!isCrashed) animate();
+}
+
+void Player::updateCollisionBox(){
     collisionBox.position.x = sprite.getPosition().x - sprite.getTextureRect().size.x / 2;
     collisionBox.position.y = sprite.getPosition().y - sprite.getTextureRect().size.y / 2;
-    //collisionShape.setPosition(collisionBox.position);
-    if(!isCrashed) move(deltaTime);
+    if(showCollisionBox) collisionShape.setPosition(collisionBox.position);
 }
 
 void Player::move(float deltaTime){
-    if (isJumping && jumpTimer.getElapsedTime().asMilliseconds() > 500.f) {
+    if (isJumping && jumpTimer.getElapsedTime().asMilliseconds() > 550.f) {
         isJumping = false;
     }
 
     velocity = velocity + pull * deltaTime;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
-        sprite.setRotation(sf::degrees(330));
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) && !isCrashing) {
+        sprite.setRotation(sf::degrees(340));
         velocity = jump; 
         isJumping = true;
         jumpTimer.restart();  
@@ -52,6 +59,20 @@ void Player::move(float deltaTime){
     sprite.move({0.f, velocity * deltaTime});
 }
 
+void Player::animate(){
+    if(animationTimer.getElapsedTime().asSeconds() > frameTime){
+        currentFrame = (currentFrame + 1) % numFrames;
+        sprite.setTextureRect(sf::IntRect({689 + currentFrame * frameWidth + 3 * currentFrame, 0}, {frameWidth, frameHeight}));
+        animationTimer.restart();
+    }
+}
+
+bool Player::isDead(){
+    return isCrashed || isCrashing;
+}
+
+
+
 sf::FloatRect Player::getBounds() const {
     return collisionBox;
 }
@@ -61,7 +82,8 @@ void Player::onCollision(Event* event) {
     if (collisionEvent) {
         ICollidable* other = (collisionEvent->getObjectA() == this) ? collisionEvent->getObjectB() : collisionEvent->getObjectA();
 
-        if (other->getType() == ObjectType::Ground || other->getType() == ObjectType::Pipes) std::cout << "beu";
+        if (other->getType() == ObjectType::Ground) isCrashed = true;
+        if (other->getType() == ObjectType::Pipes) isCrashing = true;
     }
 }
 

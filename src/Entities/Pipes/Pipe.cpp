@@ -8,22 +8,28 @@ Pipe::Pipe(TextureManager&  tm, Render& render, EventDispatcher& ed, CollisionMa
 
     collisionBox = sf::FloatRect(sf::Vector2(sprite.getPosition().x - texture.getSize().x / 2, sprite.getPosition().y + texture.getSize().y / 2), sf::Vector2(104.f, 640.f));
 
-    /*collisionShape.setSize(collisionBox.size);
-    collisionShape.setPosition(collisionBox.position);
-    collisionShape.setFillColor(sf::Color::Transparent); 
-    collisionShape.setOutlineThickness(1);
-    collisionShape.setOutlineColor(sf::Color::Red);
-    render.add(collisionShape, 10);*/
-
     cm.addCollidable(this);
 
     render.add(sprite, 2);
+
+    if(showCollisionBox){
+        collisionShape.setSize(collisionBox.size);
+        collisionShape.setPosition(collisionBox.position);
+        collisionShape.setFillColor(sf::Color::Transparent); 
+        collisionShape.setOutlineThickness(1);
+        collisionShape.setOutlineColor(sf::Color::Red);
+        render.add(collisionShape, 10);
+    }
 }
 
 void Pipe::update(float deltaTime){
-    collisionBox.position.x = sprite.getPosition().x - texture.getSize().x / 2;
-    //collisionShape.setPosition(collisionBox.position);
+    updateCollisionBox();
     move(deltaTime);
+}
+
+void Pipe::updateCollisionBox(){
+    collisionBox.position.x = sprite.getPosition().x - texture.getSize().x / 2;
+    if(showCollisionBox) collisionShape.setPosition(collisionBox.position);
 }
 
 void Pipe::move(float deltaTime){
@@ -49,4 +55,10 @@ CollisionCategory Pipe::getCollisionCategory() const{
 
 bool Pipe::isDestroyed() const {
     return false;
+}
+
+void Pipe::clean(Render& render, CollisionManager& cm){
+    render.remove(sprite, 2);
+    if(showCollisionBox) render.remove(collisionShape, 10);
+    cm.removeCollidable(this);
 }

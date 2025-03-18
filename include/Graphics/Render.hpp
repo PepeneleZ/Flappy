@@ -6,6 +6,7 @@
 class Render {
     public:
         void add(const sf::Drawable& drawable, int layer);
+        void remove(const sf::Drawable& drawable, int layer);
         void draw(sf::RenderWindow& window);
 
     private:

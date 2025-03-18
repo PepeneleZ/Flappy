@@ -12,6 +12,7 @@ class CollisionManager {
         void checkCollisions();
         bool shouldCollide(ICollidable* objA, ICollidable* objB);
         void addCollidable(ICollidable* collidable);
+        void removeCollidable(ICollidable* collidable);
 
     private:
         EventDispatcher& dispatcher;

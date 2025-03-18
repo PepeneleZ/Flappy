@@ -8,7 +8,7 @@
 #include "Entities/Pipes/PipePair.hpp"
 #include "Collisions/CollisionManager.hpp"
 #include "Events/EventDispatcher.hpp"
-#include <vector>
+#include <list>
 
 class ICollidables;
 class Game{
@@ -21,18 +21,24 @@ class Game{
     private:
         void update(float deltaTime);
         void render();
+        void spawnPipes(float deltaTime);
 
         sf::RenderWindow window;
         sf::Clock clock;
+        sf::Clock pipesClock;
 
         Render renderer;
-        TextureManager textureManager;
-        EventDispatcher eventDispatcher;
-        CollisionManager collisionManager;
+        TextureManager tm;
+        EventDispatcher ed;
+        CollisionManager cm;
 
         Background bg;
         Player player;
         Ground ground;
-        PipePair pipePair;
+
+        std::list<PipePair> pipes;
+        float timeSinceLastPipe = 0.f;
+        float spawnPipeInterval = 1.5f;
+        float startX = 1200;
 
 };

@@ -17,4 +17,14 @@ bool CollisionManager::shouldCollide(ICollidable* objA, ICollidable* objB){
 }
 
 void CollisionManager::addCollidable(ICollidable* obj) { objects.push_back(obj); }
+void CollisionManager::removeCollidable(ICollidable* obj) { 
+    for (auto it = objects.begin(); it != objects.end(); ) {
+        if (*it == obj) { 
+            it = objects.erase(it);
+            break; 
+        } else {
+            ++it;
+        }
+    }
+}
 
